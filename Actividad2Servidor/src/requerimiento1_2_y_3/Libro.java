@@ -1,10 +1,10 @@
 package requerimiento1_2_y_3;
 
+//En la clase Libro hemos creado el constructor con todo e implementado los getters por que son los únicos que necesitamos.
 public class Libro{
-	private String isbn, titulo, autor;
-	private double precio;
+	private String isbn, titulo, autor, precio;
 
-	public Libro(String isbn, String titulo, String autor, double precio) {
+	public Libro(String isbn, String titulo, String autor, String precio) {
 		super();
 		this.isbn = isbn;
 		this.titulo = titulo;
@@ -24,7 +24,7 @@ public class Libro{
 		return autor;
 	}
 
-	public double getPrecio() {
+	public String getPrecio() {
 		return precio;
 	}
 	
