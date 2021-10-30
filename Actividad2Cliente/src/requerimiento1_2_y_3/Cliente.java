@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+//El cliente elige una opción de consulta o añadir y luego se le pide los datos oportunos.
+//La conexión estará abierta hasta que el usuario introduzca "F".
 public class Cliente {
 
 	public static final int PUERTO = 2042;
@@ -35,16 +37,19 @@ public class Cliente {
 			
 			String texto = "";			
 			String opcion;
-			String conjunto = "";
-			
+			String conjunto = "";			
 			boolean continuar = true;
+			
+			//Se imprimirá por pantalla el menú de opciones.
+			//En caso de introducir un libro que no tenemos en la biblioteca, se le notificará por pantalla
+			//y en caso de introducir un criterio de búsqueda vacío también se le notificará.
 			do {
 				escribirMenu();
 				opcion = sc.nextLine().toUpperCase();
 				
 				switch (opcion) {
 					case "I":
-						System.out.println("Escribe el ISBN del libro: ");
+						System.out.println("Escribe el ISBN del libro (4 dígitos): ");
 						texto = sc.nextLine();
 						break;
 					case "T":
@@ -56,24 +61,38 @@ public class Cliente {
 						texto = sc.nextLine();
 						break;
 					case "L":
-						System.out.println("Escribe los datos del libro que quieres añadir separados con guiones: ");
+						System.out.println("Escribe los datos del libro que quieres añadir separados con guiones(-): ISBN(4 dígitos)-Título-Autor-Precio");
 						texto = sc.nextLine();
 						break;
 					case "F":
+						System.out.println("Has elegido cerrar la aplicación");
 						break;
 					default:
 						System.out.println("Opción incorrecta");
+						
 				}
-				
+				if(texto.equals("")) {
+					opcion = "N";
+					texto="Nada";
+				}
 				conjunto  = opcion + "-" + texto;
 				
 				salida.println(conjunto);
 				System.out.println("CLIENTE: Esperando respuesta ...... ");				
 				String respuesta = entradaBuffer.readLine();
 				
-				
-				if("OK".equalsIgnoreCase(respuesta)) {
+				if("".equalsIgnoreCase(respuesta)) {
+					System.out.println("No tenemos ese libro en nuestra biblioteca virtual");
+					
+				}else if("N".equalsIgnoreCase(respuesta)) {
+					System.out.println("No has introducido un criterio de búsqueda");
+					
+				}else if("OK".equalsIgnoreCase(respuesta)) {
+					System.out.println("El libro se ha añadido correctamente");
+					
+				}else if("KO".equalsIgnoreCase(respuesta)) {
 					continuar = false;
+					
 				}else {
 					String[] biblioteca = respuesta.split("_");
 					
@@ -82,8 +101,8 @@ public class Cliente {
 							System.out.println("CLIENTE: Servidor responde, el ISBN es: " + libro[0] + 
 									", el titulo es: " + libro[1] + ", el autor es: " + libro[2] + ", y el precio es: " + libro[3]);
 						}
-				}		
-				
+				}	
+					
 			}while(continuar);
 			
 			//Cerramos la conexion
@@ -99,8 +118,7 @@ public class Cliente {
 			e.printStackTrace();
 		}
 		
-		System.out.println("CLIENTE: Fin del programa");
-		
+		System.out.println("CLIENTE: Fin del programa");	
 	}
 	
 	private static void escribirMenu() {
